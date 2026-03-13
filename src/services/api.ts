@@ -4,6 +4,7 @@ const API_BASE_URL = 'https://api.sheetninja.io/c61a8d5f43e14d28b1a83c75d0e7325d
 
 export const fetchParts = async (): Promise<Part[]> => {
   const response = await fetch(API_BASE_URL);
+
   if (!response.ok) {
     throw new Error('Failed to fetch parts');
   }
@@ -12,10 +13,10 @@ export const fetchParts = async (): Promise<Part[]> => {
   const rows = Array.isArray(result.data) ? result.data : [];
 
   return rows.map((row: any) => ({
-    id: row.id,
+    id: String(row.id ?? ''),
     partName: row.part_name ?? row.partName ?? '',
     category: row.category ?? '',
-    price: Number(row.price) || 0,
+    price: String(row.price ?? ''),
     condition: row.condition ?? '',
     location: row.location ?? '',
     description: row.description ?? '',
@@ -49,5 +50,15 @@ export const createPart = async (part: NewPart): Promise<Part> => {
     throw new Error(text || 'Failed to create part');
   }
 
-  return response.json();
+  return {
+    id: crypto.randomUUID(),
+    partName: payload.part_name,
+    category: payload.category,
+    price: String(payload.price),
+    condition: payload.condition,
+    location: payload.location,
+    description: payload.description,
+    contactName: payload.contact_name,
+    createdAt: payload.created_at,
+  };
 };
