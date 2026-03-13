@@ -49,16 +49,5 @@ export const createPart = async (part: NewPart): Promise<Part> => {
     throw new Error(text || 'Failed to create part');
   }
 
-  return {
-    id: Date.now(),
-    partName: payload.part_name,
-    category: payload.category,
-    price: payload.price,
-    condition: payload.condition,
-    location: payload.location,
-    description: payload.description,
-    contactName: payload.contact_name,
-    createdAt: payload.created_at,
-  };
-};
+  return response.json();
 };
