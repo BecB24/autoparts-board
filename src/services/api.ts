@@ -7,8 +7,21 @@ export const fetchParts = async (): Promise<Part[]> => {
   if (!response.ok) {
     throw new Error('Failed to fetch parts');
   }
+
   const result = await response.json();
-  return Array.isArray(result.data) ? result.data : [];
+  const rows = Array.isArray(result.data) ? result.data : [];
+
+  return rows.map((row: any) => ({
+    id: row.id,
+    partName: row.part_name ?? row.partName ?? '',
+    category: row.category ?? '',
+    price: Number(row.price) || 0,
+    condition: row.condition ?? '',
+    location: row.location ?? '',
+    description: row.description ?? '',
+    contactName: row.contact_name ?? row.contactName ?? '',
+    createdAt: row.created_at ?? row.createdAt ?? '',
+  }));
 };
 
 export const createPart = async (part: NewPart): Promise<Part> => {
@@ -32,8 +45,20 @@ export const createPart = async (part: NewPart): Promise<Part> => {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to create part');
+    const text = await response.text();
+    throw new Error(text || 'Failed to create part');
   }
 
-  return response.json();
+  return {
+    id: Date.now(),
+    partName: payload.part_name,
+    category: payload.category,
+    price: payload.price,
+    condition: payload.condition,
+    location: payload.location,
+    description: payload.description,
+    contactName: payload.contact_name,
+    createdAt: payload.created_at,
+  };
+};
 };
