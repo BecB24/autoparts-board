@@ -1,4 +1,5 @@
 export interface Part {
+  id: string;
   partName: string;
   category: string;
   price: string;
@@ -17,5 +18,4 @@ export interface NewPart {
   location: string;
   description: string;
   contactName: string;
-  createdAt: string;
 }
